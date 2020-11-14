@@ -1,14 +1,21 @@
 {
-  "name": "nuxt-content-demo",
+  "name": "nuxt-demo",
   "version": "1.0.0",
-  "description": "Démo d'utilisation de @nuxt/content",
+  "description": "Démo d'utilisation de nuxt",
   "license": "MIT",
   "scripts": {
-    "start": "nuxt dev",
-    "build": "nuxt generate"
+    "universal:start": "nuxt dev --config-file nuxt.universal.config.js",
+    "universal:build": "nuxt build --config-file nuxt.universal.config.js",
+    "universal:prod": "nuxt start --config-file nuxt.universal.config.js",
+
+    "static:start": "nuxt dev --config-file nuxt.static.config.js",
+    "static:build": "nuxt generate --config-file nuxt.static.config.js",
+    "static:prod": "nuxt start --config-file nuxt.static.config.js"
   },
   "devDependencies": {
-    "@nuxt/content": "1.9.0",
     "nuxt": "2.14.6"
+  },
+  "dependencies": {
+    "@nuxt/http": "^0.6.0"
   }
 }
