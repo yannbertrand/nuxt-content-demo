@@ -13,44 +13,22 @@
       <li>Statut: {{show.status}}</li>
     </ul>
 
-    <nuxt-content :document="show" />
-
-    <footer>
-      <span><nuxt-link
-        v-if="prev"
-        :to="{ name: 'slug', params: { slug: prev.slug } }"
-      >&lt; {{ prev.title }}</nuxt-link></span>
-      |
-      <span><nuxt-link
-        v-if="next"
-        :to="{ name: 'slug', params: { slug: next.slug } }"
-      >{{ next.title }} &gt;</nuxt-link></span>
-    </footer>
+    <p>{{show.description}}</p>
   </main>
 </template>
 
 <script>
 export default {
-  async asyncData ({ $content, params, error }) {
+  async asyncData ({ $http, params, error }) {
     let show
 
     try {
-      show = await $content('shows', params.slug).fetch()
+      show = await $http.$get(`https://mock-tv-shows-api.netlify.app/shows/${params.slug}.json`)
     } catch (e) {
       error({ status: 404, message: 'Cette série n\'a pas été enregistrée' })
     }
 
-    const [prev, next] = await $content('shows')
-      .only(['title', 'slug'])
-      .sortBy('creation', 'desc')
-      .surround(params.slug)
-      .fetch()
-
-    return {
-      show,
-      prev,
-      next
-    }
+    return { show }
   }
 }
 </script>

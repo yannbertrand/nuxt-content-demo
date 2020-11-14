@@ -2,9 +2,10 @@
   <main>
     <h1>Mes séries</h1>
 
-    <label>Chercher une série <input id="search" v-model="q" placeholder="Breaking Bad..." /></label>
-
-    <div id="shows">
+    <div v-if="$fetchState.pending">
+      Chargement de la liste en cours...
+    </div>
+    <div id="shows" v-else>
       <article v-for="show in shows" :key="show.slug">
         <nuxt-link
           :to="{ name: 'slug', params: { slug: show.slug } }"
@@ -22,28 +23,13 @@
 
 <script>
 export default {
-  watchQuery: true,
-  async asyncData ({ $content, route }) {
-    const q = route.query.q
-
-    let query = $content('shows')
-      .sortBy('creation', 'desc')
-
-    if (q) {
-      query = query.search('title', q)
-    }
-
-    const shows = await query.fetch()
-
+  data() {
     return {
-      q,
-      shows
+      shows: []
     }
   },
-  watch: {
-    q () {
-      this.$router.replace({ query: this.q ? { q: this.q } : undefined }).catch(() => { })
-    }
+  async fetch() {
+    this.shows = await fetch('https://mock-tv-shows-api.netlify.app/shows.json').then(res => res.json())
   }
 }
 </script>
