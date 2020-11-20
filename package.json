@@ -10,7 +10,11 @@
 
     "static:start": "nuxt dev --config-file nuxt.static.config.js",
     "static:build": "nuxt generate --config-file nuxt.static.config.js",
-    "static:prod": "nuxt start --config-file nuxt.static.config.js"
+    "static:prod": "nuxt start --config-file nuxt.static.config.js",
+
+    "spa:start": "nuxt dev --config-file nuxt.spa.config.js",
+    "spa:build": "nuxt generate --config-file nuxt.spa.config.js",
+    "spa:prod": "nuxt start --config-file nuxt.spa.config.js"
   },
   "devDependencies": {
     "nuxt": "2.14.6"
