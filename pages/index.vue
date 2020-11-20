@@ -2,11 +2,13 @@
   <main>
     <h1>Mes séries</h1>
 
+    <label>Chercher une série <input id="search" v-model="query" @keypress.enter="search()" placeholder="Game of Thrones..." /></label>
+
     <div v-if="$fetchState.pending">
       Chargement de la liste en cours...
     </div>
     <div id="shows" v-else>
-      <article v-for="show in shows" :key="show.slug">
+      <article v-for="show in filteredShows" :key="show.slug">
         <nuxt-link
           :to="{ name: 'slug', params: { slug: show.slug } }"
         >
@@ -25,11 +27,19 @@
 export default {
   data() {
     return {
-      shows: []
+      shows: [],
+      filteredShows: [],
+      query: '',
     }
   },
   async fetch() {
     this.shows = await fetch('https://mock-tv-shows-api.netlify.app/shows.json').then(res => res.json())
+    this.filteredShows = this.shows
+  },
+  methods: {
+    search() {
+      this.filteredShows = this.shows.filter(show => show.title.toUpperCase().includes(this.query.toUpperCase()))
+    }
   }
 }
 </script>
