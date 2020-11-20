@@ -2,23 +2,30 @@
   <main>
     <h1>Mes séries</h1>
 
-    <label>Chercher une série <input id="search" v-model="query" @keypress.enter="search()" placeholder="Game of Thrones..." /></label>
-
-    <div v-if="$fetchState.pending">
-      Chargement de la liste en cours...
+    <div id="loader" v-if="$fetchState.pending">
+      <img src="/loader.svg" width="100" height="100">
+      <h2>Chargement de la liste en cours...</h2>
     </div>
-    <div id="shows" v-else>
-      <article v-for="show in filteredShows" :key="show.slug">
-        <nuxt-link
-          :to="{ name: 'slug', params: { slug: show.slug } }"
-        >
-          <h2>{{ show.title }}</h2>
-          <img :src="show.images.poster" width="270" height="397" alt="" />
-        </nuxt-link>
-        <div class="genres">
-          <Genre v-for="genre in show.genres" :key="genre" :name="genre" />
-        </div>
-      </article>
+
+    <div id="page" v-else>
+      <label>
+        Chercher une série
+        <input id="search" v-model="query" @keypress.enter="search()" placeholder="Game of Thrones..." />
+      </label>
+
+      <section id="shows">
+        <article v-for="show in filteredShows" :key="show.slug">
+          <nuxt-link
+            :to="{ name: 'slug', params: { slug: show.slug } }"
+          >
+            <h2>{{ show.title }}</h2>
+            <img :src="show.images.poster" width="270" height="397" alt="" />
+          </nuxt-link>
+          <div class="genres">
+            <Genre v-for="genre in show.genres" :key="genre" :name="genre" />
+          </div>
+        </article>
+      </section>
     </div>
   </main>
 </template>
@@ -36,6 +43,7 @@ export default {
     this.shows = await fetch('https://mock-tv-shows-api.netlify.app/shows.json').then(res => res.json())
     this.filteredShows = this.shows
   },
+  // fetchDelay: 5000,
   methods: {
     search() {
       this.filteredShows = this.shows.filter(show => show.title.toUpperCase().includes(this.query.toUpperCase()))
@@ -45,6 +53,26 @@ export default {
 </script>
 
 <style>
+#loader {
+  margin-top: 3rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 1rem;
+}
+#loader img {
+  width: 100px;
+  background: #ffffff;
+}
+#loader h2 {
+  font-size: 1.5rem;
+}
+#shows {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
 label {
   margin: 0rem 2rem 2rem 2rem;
   font-size: 1.5rem;
@@ -52,11 +80,6 @@ label {
 input {
   font-size: 1.5rem;
   padding: 0.5rem;
-}
-#shows {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
 }
 article {
   background-color: rgb(248,250,252);
