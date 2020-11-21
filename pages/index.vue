@@ -2,7 +2,7 @@
   <main>
     <h1>Mes séries</h1>
 
-    <div id="loader" v-if="$fetchState.pending">
+    <div id="loader" v-if="!filteredShows">
       <img src="/loader.svg" width="100" height="100">
       <h2>Chargement de la liste en cours...</h2>
     </div>
@@ -31,6 +31,9 @@
 </template>
 
 <script>
+import { reactive } from 'vue'
+import { useFetch } from '@nuxt/composables'
+
 export default {
   data() {
     return {
@@ -39,9 +42,9 @@ export default {
       query: '',
     }
   },
-  async fetch() {
-    this.shows = await fetch('https://mock-tv-shows-api.netlify.app/shows.json').then(res => res.json())
-    this.filteredShows = this.shows
+  async setup() {
+    const $fetch = useFetch()
+    const { data: shows } = await $fetch('https://mock-tv-shows-api.netlify.app/shows.json')
   },
   // fetchDelay: 5000,
   methods: {
