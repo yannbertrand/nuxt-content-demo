@@ -35,16 +35,17 @@ import { reactive } from 'vue'
 import { useFetch } from '@nuxt/composables'
 
 export default {
-  data() {
-    return {
-      shows: [],
-      filteredShows: [],
-      query: '',
-    }
-  },
   async setup() {
     const $fetch = useFetch()
     const { data: shows } = await $fetch('https://mock-tv-shows-api.netlify.app/shows.json')
+
+    const data = reactive({
+      shows,
+      filteredShows: shows,
+      query: '',
+    })
+
+    return { ...toRefs(data) }
   },
   // fetchDelay: 5000,
   methods: {
