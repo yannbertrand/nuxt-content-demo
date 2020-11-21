@@ -45,14 +45,13 @@ export default {
       query: '',
     })
 
-    return { ...toRefs(data) }
+    const search = () => {
+      data.filteredShows = data.shows.filter(show => show.title.toUpperCase().includes(data.query.toUpperCase()))
+    }
+
+    return { ...toRefs(data), search }
   },
   // fetchDelay: 5000,
-  methods: {
-    search() {
-      this.filteredShows = this.shows.filter(show => show.title.toUpperCase().includes(this.query.toUpperCase()))
-    }
-  }
 }
 </script>
 
